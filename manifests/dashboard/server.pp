@@ -9,7 +9,7 @@ class puppet::dashboard::server (
   $htpasswd_path             = '/etc/puppet/dashboard.htpasswd',
   $log_dir                   = '/var/log/puppet',
   $mysql_host                = '127.0.0.1',
-  $ysql_user                = 'dashboard',
+  $mysql_user                = 'dashboard',
   $mysql_password            = 'puppet',
   $mysql_max_packet_size     = '32M',
   $security                  = 'none',
