@@ -19,7 +19,10 @@ Listen 8140
 
     # Only allow high security cryptography. Alter if needed for compatibility.
     SSLProtocol             All -SSLv2
-    SSLCipherSuite          HIGH:!ADH:RC4+RSA:-MEDIUM:-LOW:-EXP
+#    SSLCipherSuite          HIGH:!ADH:RC4+RSA:-MEDIUM:-LOW:-EXP
+    SSLHonorCipherOrder On
+    SSLCipherSuite EECDH+AES:EDH+AES:-SHA1:EECDH+RC4:EDH+RC4:RC4-SHA:EECDH+AES256:EDH+AES256:AES256-SHA:!aNULL:!eNULL:!EXP:!LOW:!MD5
+
     SSLCertificateFile      /var/lib/puppet/ssl/certs/<%= @fqdn %>.pem
     SSLCertificateKeyFile   /var/lib/puppet/ssl/private_keys/<%= @fqdn %>.pem
     SSLCertificateChainFile /var/lib/puppet/ssl/ca/ca_crt.pem

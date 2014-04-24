@@ -31,11 +31,11 @@ class puppet::dashboard::maintenance (
     $my_purge_old_reports_command = "/usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production reports:prune upto=${reports_days_to_keep} unit=day >> /var/log/puppet/dashboard_maintenance.log"
   }
 
-  if $dump_dir == '/var/local' {
-    $my_dump_database_command = $dump_database_command
-  } else {
-    $my_dump_database_command = "cd ~puppet-dashboard && sudo -u puppet-dashboard /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=${dump_dir}/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log 2>&1 && bzip2 -v9 ${dump_dir}/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log 2>&1"
-  }
+  #  if $dump_dir == '/var/local' {
+  #  $my_dump_database_command = $dump_database_command
+  #} else {
+  #  $my_dump_database_command = "cd ~puppet-dashboard && sudo -u puppet-dashboard /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=${dump_dir}/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log 2>&1 && bzip2 -v9 ${dump_dir}/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log 2>&1"
+  #}
 
   common::mkdir_p { $dump_dir: }
 
@@ -63,12 +63,12 @@ class puppet::dashboard::maintenance (
     minute  => $purge_old_reports_minute,
   }
 
-  cron { 'dump_dashboard_database':
-    command => $my_dump_database_command,
-    user    => $dump_database_user,
-    hour    => $dump_database_hour,
-    minute  => $dump_database_minute,
-  }
+  #cron { 'dump_dashboard_database':
+  #  command => $my_dump_database_command,
+  #  user    => $dump_database_user,
+  #  hour    => $dump_database_hour,
+  #  minute  => $dump_database_minute,
+  #}
 
   cron { 'purge_old_db_backups':
     command => "/bin/find ${dump_dir} -type f -mtime +${days_to_keep_backups} -exec /bin/rm -f {} \\;",

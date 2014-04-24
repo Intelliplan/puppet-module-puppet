@@ -3,7 +3,7 @@
 class puppet::master::maintenance (
   $clientbucket_path          = '/var/lib/puppet/clientbucket/',
   $clientbucket_days_to_keep  = '30',
-  $filebucket_cleanup_command = '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +30 -exec /bin/rm -fr {} \;',
+  $filebucket_cleanup_command = '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +15 -exec /bin/rm -fr {} \;',
   $filebucket_cleanup_user    = 'root',
   $filebucket_cleanup_hour    = '0',
   $filebucket_cleanup_minute  = '0',

@@ -8,7 +8,8 @@ class puppet::dashboard::server (
   $htpasswd                  = undef,
   $htpasswd_path             = '/etc/puppet/dashboard.htpasswd',
   $log_dir                   = '/var/log/puppet',
-  $mysql_user                = 'dashboard',
+  $mysql_host                = '127.0.0.1',
+  $ysql_user                = 'dashboard',
   $mysql_password            = 'puppet',
   $mysql_max_packet_size     = '32M',
   $security                  = 'none',
@@ -20,9 +21,9 @@ class puppet::dashboard::server (
   require 'passenger'
   include puppet::dashboard::maintenance
 
-  class { 'mysql::server':
-    config_hash => { 'max_allowed_packet' => $mysql_max_packet_size }
-  }
+  #class { 'mysql::server':
+  #  config_hash => { 'max_allowed_packet' => $mysql_max_packet_size }
+  #}
 
   if $security == 'htpasswd' and $htpasswd != undef {
 
@@ -56,24 +57,24 @@ class puppet::dashboard::server (
     notify  => Service['httpd'],           # apache
   }
 
-  mysql::db { 'dashboard':
-    user     => $mysql_user,
-    password => $mysql_password,
-    host     => 'localhost',
-    grant    => ['all'],
-    require  => [ Class['mysql::server'],
-                  File['database_config'],
-                ],
-  }
+  #  mysql::db { 'dashboard':
+  #  user     => $mysql_user,
+  #  password => $mysql_password,
+  #  host     => 'localhost',
+  #  grant    => ['all'],
+  #  require  => [ Class['mysql::server'],
+  #                File['database_config'],
+  #              ],
+  #}
 
-  exec { 'migrate_dashboard_database':
-    command     => 'rake RAILS_ENV=production db:migrate',
-    onlyif      => 'rake RAILS_ENV=production db:version 2>/dev/null|grep ^\'Current version\' | awk -F : \'{print $2}\' | awk \'{print $1}\'|grep ^0$',
-    path        => '/bin:/usr/bin:/sbin:/usr/sbin',
-    cwd         => '/usr/share/puppet-dashboard',
-    refreshonly => true,
-    subscribe   => Mysql::Db['dashboard'],
-  }
+  #exec { 'migrate_dashboard_database':
+  #  command     => 'rake RAILS_ENV=production db:migrate',
+  #  onlyif      => 'rake RAILS_ENV=production db:version 2>/dev/null|grep ^\'Current version\' | awk -F : \'{print $2}\' | awk \'{print $1}\'|grep ^0$',
+  #  path        => '/bin:/usr/bin:/sbin:/usr/sbin',
+  #  cwd         => '/usr/share/puppet-dashboard',
+  #  refreshonly => true,
+  #  subscribe   => Mysql::Db['dashboard'],
+  #}
 
   Service['puppet-dashboard-workers'] {
     ensure    => running,
