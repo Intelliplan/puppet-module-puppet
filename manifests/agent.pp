@@ -129,4 +129,16 @@ class puppet::agent (
     user    => $cron_user,
     special => 'reboot',
   }
+  file{'/var/lib/puppet':
+    ensure => 'directory',
+    mode   => '0755',
+  }
+
+  file{'/var/lib/puppet/state':
+    ensure => 'directory',
+    mode   => '1755',
+  }
+
+
+
 }
